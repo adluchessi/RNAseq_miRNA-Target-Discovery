@@ -9,7 +9,7 @@ input_df=data.frame(Gene.symbol, logFC,adj.P.Val)
 head(input_df)
 dim(input_df)
 
-output_df <- run_pathfindR(input_df, gene_sets = "Reactome")
+output_df <- run_pathfindR(input_df, gene_sets = "Reactome") #is possivble change gene_set by GO_all, etc
 dim(output_df)
 
 
