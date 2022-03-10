@@ -2,21 +2,23 @@
 library(DESeq2)
 getwd()
 
-cts = read.delim("nat_bw2-ReadCount.tab", sep="\t", header = T)
-head(cts)
+cts = read.delim("casecontrol_readcount.txt", sep="", header = T)
+rownames(cts)=cts[,1]
+cts=cts[,-1]
 dim(cts)
 
-colnames(cts)= c("arvc1","arvc2","arvc3","control1","control2","arvc4","arvc5","arvc6","control3","control4","arvc7","arvc8","control5","arvc9")
+#colnames(cts)= c("arvc1","arvc2","arvc3","control1","control2","arvc4","arvc5","arvc6","control3","control4","arvc7","arvc8","control5","arvc9")
 
 Name=colnames(cts)
-Time=c(rep("Case", 3), rep("Control", 2), rep("Case",3), rep("Control", 2), rep("Case",2), "Control", "Case")
+Time=c(rep("Control", 3), "Case", rep("Control",6), rep("Case", 4), rep("Control",12), "Case", rep("Control", 17), rep("Case",48))
 coldata=data.frame(Name,Time)
 head(coldata,14)
+dim(coldata)
 
 log_cts<- log(cts+1, 10) # This is log base 10 + 1 for "0"
-table(rowSums(log_cts>log10(3))>=11)
+table(rowSums(log_cts>log10(3))>=5)
 
-keep.exprs<- rowSums(log_cts>log10(3))>=11
+keep.exprs<- rowSums(log_cts>log10(3))>=5
 cts_filt<-cts[keep.exprs,]
 dim(cts_filt)
 head(cts_filt,10)
