@@ -1,0 +1,37 @@
+getwd()
+
+
+db=read.delim("funciona.tab.txt", head=F)
+head(db)
+
+rownames(db)=db[,1]
+db=db[,-1]
+head(db)
+dim(db)
+
+db=db[,c(1,3,5,7,9,11,13,15,17)]
+
+Name=colnames(db)
+Time=c(rep("Control",3), rep("case",6))
+
+coldata=data.frame(Name,Time)
+head(coldata,18)
+
+
+log_cts<- log(db+1, 10) # This is log base 10 + 1 for "0"
+table(rowSums(log_cts>log10(3))>=9)
+
+keep.exprs<- rowSums(log_cts>log10(3))>=9
+cts_filt<-db[keep.exprs,]
+dim(cts_filt)
+head(cts_filt,10)
+
+library(DESeq2)
+dds <- DESeqDataSetFromMatrix(countData = round(cts_filt), colData = coldata, design = ~ Time)
+dds$Time <- factor(dds$Time, levels = c("Control","case"))
+head(dds)
+
+dds <- DESeq(dds)
+res <- results(dds)
+head(res)
+dim(res)
